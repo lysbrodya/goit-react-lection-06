@@ -1,33 +1,77 @@
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
 // БАЛВАНКА
 // import { combineReducers, createStore } from "redux";
 // // import { composeWithDevTools } from "@redux-devtools/extension";
 import balanceReducer from "./balanceSlice";
 import localReducer from "./localSlice";
 import { configureStore } from "@reduxjs/toolkit";
-// 2) ОГОЛОСИТИ ПОЧАТКОВИЙ СТАН
-const initialStait = {
-  balance: {
-    value: 100,
-  },
-  local: {
-    lang: "lt",
-  },
+
+const balancePersistConfig = {
+  key: "balance",
+  storage,
+  whitelist: ["value"],
 };
+
+const persistedBalanceReducer = persistReducer(
+  balancePersistConfig,
+  balanceReducer
+);
+// 1)2) ОГОЛОСИТИ сТОР редакс-ТУЛКІД
+// Очікує об'єкт параметрів
+const localPersistConfig = {
+  key: "lang",
+  storage,
+  whitelist: ["lang"],
+};
+const persistedLocalReducer = persistReducer(localPersistConfig, localReducer);
+
+// const persistedLocalReducer = persistReducer({
+//   key: "lang",
+//   storage,
+//   whitelist: ["lang"],
+// }, localReducer);
+
+export const store = configureStore({
+  reducer: { balance: persistedBalanceReducer, local: persistedLocalReducer },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
+export const persistor = persistStore(store);
+
+// 2) ОГОЛОСИТИ ПОЧАТКОВИЙ СТАН
+// const initialStait = {
+//   balance: {
+//     value: 100,
+//   },
+//   local: {
+//     lang: "lt",
+//   },
+// };
 
 // const rootReducer = combineReducers({
 //   balance: balanceReducer,
 //   local: localReducer,
 // });
 
-// 1) ОГОЛОСИТИ сТОР редакс
+// 1)1) ОГОЛОСИТИ сТОР редакс
 // ОЧікує декілька аргументів
 // export const store = createStore(rootReducer, composeWithDevTools());
 
-// 1) ОГОЛОСИТИ сТОР редакс-ТУЛКІД
-// Очікує об'єкт параметрів
-export const store = configureStore({
-  reducer: { balance: balanceReducer, local: localReducer },
-});
 // 3) Оголошуємо єкшн
 // export const deposit = {
 //   type: "balance/deposit",
