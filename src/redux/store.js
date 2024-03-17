@@ -1,8 +1,9 @@
 // БАЛВАНКА
-import { combineReducers, createStore } from "redux";
-import { composeWithDevTools } from "@redux-devtools/extension";
-import { balanceReducer } from "./balanceSlice";
-import { localReducer } from "./localSlice";
+// import { combineReducers, createStore } from "redux";
+// // import { composeWithDevTools } from "@redux-devtools/extension";
+import balanceReducer from "./balanceSlice";
+import localReducer from "./localSlice";
+import { configureStore } from "@reduxjs/toolkit";
 // 2) ОГОЛОСИТИ ПОЧАТКОВИЙ СТАН
 const initialStait = {
   balance: {
@@ -12,6 +13,21 @@ const initialStait = {
     lang: "lt",
   },
 };
+
+// const rootReducer = combineReducers({
+//   balance: balanceReducer,
+//   local: localReducer,
+// });
+
+// 1) ОГОЛОСИТИ сТОР редакс
+// ОЧікує декілька аргументів
+// export const store = createStore(rootReducer, composeWithDevTools());
+
+// 1) ОГОЛОСИТИ сТОР редакс-ТУЛКІД
+// Очікує об'єкт параметрів
+export const store = configureStore({
+  reducer: { balance: balanceReducer, local: localReducer },
+});
 // 3) Оголошуємо єкшн
 // export const deposit = {
 //   type: "balance/deposit",
@@ -56,10 +72,7 @@ const initialStait = {
 //       return state;
 //   }
 // };
-const rootReducer = combineReducers({
-  balance: balanceReducer,
-  local: localReducer,
-});
+
 // const rootReducer = (state = initialStait, action) => {
 //   switch (action.type) {
 //     case "balance/deposit":
@@ -89,5 +102,3 @@ const rootReducer = combineReducers({
 //       return state;
 //   }
 // };
-// 1)ОГОЛОСИТИ сТОР
-export const store = createStore(rootReducer, composeWithDevTools());

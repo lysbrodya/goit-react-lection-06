@@ -11,9 +11,7 @@ export default function Balance() {
       <input
         type="number"
         value={value}
-        onChange={(e) =>
-          setValue(Number(e.target.value), console.log(e.target.value))
-        }
+        onChange={(e) => setValue(Number(e.target.value))}
       />
       <button onClick={() => dispatch(deposit(value))}>Deposit credits</button>
       <button onClick={() => dispatch(withdraw(value))}>
